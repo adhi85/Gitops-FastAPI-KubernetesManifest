@@ -1,0 +1,29 @@
+node {
+    def app
+
+    stage('Clone repository') {
+      
+        checkout scm
+    }
+
+    stage('Update GIT') {
+        environment {
+            GIT_REPO_NAME = "Gitops-FastAPI-KubernetesManifest"
+            GIT_USER_NAME = "adhi85"
+        }
+            script {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                        sh "git config user.email adhi@gmail.com"
+                        sh "git config user.name Adhithya"
+                        sh "cat deployment.yaml"
+                        sh "sed -i 's+forsignup8580/todoapp.*+forsignup8580/todoapp:${DOCKERTAG}+g' deployment.yaml"
+                        sh "cat deployment.yaml"
+                        sh "git add ."
+                        sh "git commit -m 'Done by Jenkins Job updatemanifest: ${env.BUILD_NUMBER}'"
+                        sh "git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main"                        
+      }
+    }
+  }
+}
+}
