@@ -18,7 +18,7 @@ spec:
         app: fastapidemo
     spec:
       containers:
-      - image: forsignup8580/todoapp:latest
+      - image: forsignup8580/todoapp:9
         name: fastapidemo
         resources: {}
         ports:
